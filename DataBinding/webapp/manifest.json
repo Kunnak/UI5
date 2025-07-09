@@ -18,6 +18,7 @@
 	},
 
 	"sap.ui5": {
+        "handleValidation": true,
 		"dependencies": {
 			"minUI5Version": "1.120.0",
 			"libs": {
@@ -36,6 +37,11 @@
             "":{
                 "type": "sap.ui.model.json.JSONModel",
                 "uri": "./model/data.json"
+            },
+
+            "products" : {
+                "type": "sap.ui.model.json.JSONModel",
+                "uri": "./model/Products.json"
             },
 
             "i18n": {

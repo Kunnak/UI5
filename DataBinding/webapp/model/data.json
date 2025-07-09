@@ -8,7 +8,9 @@
             "city": "Essen",
             "zip": "45359",
             "country": "Germany"
-        }
+        },
+        "salesAmount": 12345.6789,
+        "currencyCode": "EUR"
     },
 
     "Kunde2": {
@@ -20,6 +22,9 @@
             "city": "Mülheim",
             "zip": "45468",
             "country": "Germany"
-        }
-    }
+        },
+        "salesAmount": 98765.4321
+    },
+    "currencyCode": "EUR",
+    "priceThreshold": 20
 }

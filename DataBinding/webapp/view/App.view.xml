@@ -1,0 +1,52 @@
+<!DOCTYPE root-source>
+<mvc:View
+	xmlns="sap.m"
+	xmlns:form="sap.ui.layout.form"
+    xmlns:l="sap.ui.layout"
+	xmlns:mvc="sap.ui.core.mvc">
+<hbox>
+	<Panel headerText="{i18n>panel1HeaderText}" class="sapUiResponsiveMargin" width="auto">
+		<form:SimpleForm editable="true" layout="ColumnLayout">
+            <Label text="{i18n>firstName}"/>
+            <Input value="{/Kunde1/firstName}" valueLiveUpdate="true" width="200px" enabled="{/Kunde1/enabled}"/>
+            <Label text="{i18n>lastName}"/>
+            <Input value="{/Kunde1/lastName}" valueLiveUpdate="true" width="200px" enabled="{/Kunde1/enabled}"/>
+            <Label text="{i18n>enabled}"/>
+            <CheckBox selected="{/Kunde1/enabled}"/>
+		</form:SimpleForm>
+	</Panel>
+    <Panel headerText="{i18n>panel2HeaderText}" class="sapUiResponsiveMargin" width="auto">
+		<content>
+			<l:VerticalLayout>
+				<Label labelFor="address" text="{i18n>address}:"/>
+				<FormattedText class="sapUiSmallMarginBottom"
+                    htmlText="{/Kunde1/address/street}&lt;br>{/Kunde1/address/zip} {/Kunde1/address/city}&lt;br>{/Kunde1/address/country}"
+					width="200px"/>
+			</l:VerticalLayout>
+		</content>
+    </Panel>
+</hbox>
+
+<hbox>
+    <Panel headerText="{i18n>panel1HeaderText}" class="sapUiResponsiveMargin" width="auto">
+        <form:SimpleForm editable="true" layout="ColumnLayout">
+            <Label text="{i18n>firstName}"/>
+            <Input value="{/Kunde2/firstName}" valueLiveUpdate="true" width="200px" enabled="{/Kunde2/enabled}"/>
+            <Label text="{i18n>lastName}"/>
+            <Input value="{/Kunde2/lastName}" valueLiveUpdate="true" width="200px" enabled="{/Kunde2/enabled}"/>
+            <Label text="{i18n>enabled}"/>
+            <CheckBox selected="{/Kunde2/enabled}"/>
+        </form:SimpleForm>
+    </Panel>
+    <Panel headerText="{i18n>panel2HeaderText}" class="sapUiResponsiveMargin" width="auto">
+		<content>
+			<l:VerticalLayout>
+				<Label labelFor="address" text="{i18n>address}:"/>
+				<FormattedText class="sapUiSmallMarginBottom"
+                    htmlText="{/Kunde2/address/street}&lt;br>{/Kunde2/address/zip} {/Kunde2/address/city}&lt;br>{/Kunde2/address/country}"
+					width="200px"/>
+			</l:VerticalLayout>
+		</content>
+    </Panel>
+</hbox>
+</mvc:View>

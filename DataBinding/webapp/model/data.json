@@ -1,0 +1,25 @@
+{
+    "Kunde1": {
+        "firstName": "Yannick",
+        "lastName": "Spangel",
+        "enabled": true,
+        "address": {
+            "street": "Frintroper Str. 70",
+            "city": "Essen",
+            "zip": "45359",
+            "country": "Germany"
+        }
+    },
+
+    "Kunde2": {
+        "firstName": "Raphael",
+        "lastName": "Jannes",
+        "enabled": false,
+        "address": {
+            "street": "Raphaels Straße 1",
+            "city": "Mülheim",
+            "zip": "45468",
+            "country": "Germany"
+        }
+    }
+}

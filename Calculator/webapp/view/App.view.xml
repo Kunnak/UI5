@@ -1,0 +1,5 @@
+<!DOCTYPE root-source>
+<mvc:View
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m">
+</mvc:View>

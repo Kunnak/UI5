@@ -1,19 +1,23 @@
 sap.ui.define([
     "sap/ui/core/Messaging",
-	"sap/ui/core/mvc/Controller",
-	"sap/m/MessageToast",
-	"sap/m/MessageBox",
-	"sap/ui/model/Sorter",
-	"sap/ui/model/Filter",
-	"sap/ui/model/FilterOperator",
-	"sap/ui/model/FilterType",
-	"sap/ui/model/json/JSONModel"
-], function (Messaging, Controller, MessageToast, MessageBox, Sorter, Filter, FilterOperator, FilterType, JSONModel) {
-	"use strict";
+    "sap/ui/core/mvc/Controller",
+    "sap/m/MessageToast",
+    "sap/m/MessageBox",
+    "sap/ui/model/Sorter",
+    "sap/ui/model/Filter",
+    "sap/ui/model/FilterOperator",
+    "sap/ui/model/FilterType",
+    "sap/ui/model/json/JSONModel"
+], function (Messaging, Controller, MessageToast, MessageBox, Sorter, Filter, FilterOperator,
+    FilterType, JSONModel) {
+    "use strict";
 
-	return Controller.extend("sap.ui.core.tutorial.odatav4.controller.App", {
+    return Controller.extend("sap.ui.core.tutorial.odatav4.controller.App", {
 
-		onInit : function () {
+        /**
+         *  Hook for initializing the controller
+         */
+        onInit : function () {
             var oMessageModel = Messaging.getMessageModel(),
                 oMessageModelBinding = oMessageModel.bindList("/", undefined, [],
                     new Filter("technical", FilterOperator.EQ, true)),
@@ -24,16 +28,16 @@ sap.ui.define([
                     order : 0
                 });
 
-                this.getView().setModel(oViewModel, "appView");
-                this.getView().setModel(oMessageModel, "message");
+            this.getView().setModel(oViewModel, "appView");
+            this.getView().setModel(oMessageModel, "message");
 
-                oMessageModelBinding.attachChange(this.onMessageBindingChange, this);
-                this._bTechnicalErrors = false;
-		},
+            oMessageModelBinding.attachChange(this.onMessageBindingChange, this);
+            this._bTechnicalErrors = false;
+        },
 
         onCreate : function () {
-            var oList = this.byId("peopleList"),
-                oBinding = oList.getBinding("items"),
+            var oTable = this.byId("PeopleTable"),
+                oBinding = oTable.getBinding("items"),
                 oContext = oBinding.create({
                     "UserName" : "",
                     "FirstName" : "",
@@ -44,7 +48,7 @@ sap.ui.define([
             this._setUIChanges();
             this.getView().getModel("appView").setProperty("/usernameEmpty", true);
 
-            oList.getItems().some(function (oItem) {
+            oTable.getItems().some(function (oItem) {
                 if (oItem.getBindingContext() === oContext) {
                     oItem.focus();
                     oItem.setSelected(true);
@@ -52,6 +56,52 @@ sap.ui.define([
                 }
             });
         },
+
+        onDelete : function () {
+		    var oContext,
+		        oSelected = this.byId("PeopleTable").getSelectedItem(),
+		        sUserName,
+		        oTable = this.byId("PeopleTable");
+ 
+		    if (oSelected) {
+		        oContext = oSelected.getBindingContext();
+		        sUserName = oContext.getProperty("UserName");
+		        
+		        console.log("Deleting user:", sUserName); 
+		        
+		        oTable.removeSelections(true);
+		        
+		        MessageToast.show(this._getText("deletionSuccessMessage", [sUserName]), {
+		            duration: 3000,
+		            width: "15rem"
+		        });
+		        
+		        oContext.delete().then(function () {
+		            console.log("Delete successful for user:", sUserName); 
+		            this._setUIChanges(false);
+		            
+		        }.bind(this), function (oError) {
+		            console.log("Delete error:", oError); 
+		            this._setUIChanges();
+		            if (oError.canceled) {
+		                MessageToast.show(this._getText("deletionRestoredMessage", [sUserName]), {
+		                    duration: 3000,
+		                    width: "15rem"
+		                });
+		                return;
+		            }
+		            MessageBox.error(oError.message + ": " + sUserName);
+		        }.bind(this));
+		        
+		        this._setUIChanges(true);
+		    } else {
+		        console.log("No item selected for deletion"); 
+		        MessageToast.show("Please select a user to delete", {
+		            duration: 3000,
+		            width: "15rem"
+		        });
+		    }
+		},
 
         onInputChange : function (oEvt) {
             if (oEvt.getParameter("escPressed")) {
@@ -75,6 +125,12 @@ sap.ui.define([
             MessageToast.show(this._getText("refreshSuccessMessage", []));
         },
 
+        onResetChanges : function () {
+            this.byId("PeopleTable").getBinding("items").resetChanges();
+            this._bTechnicalErrors = false; 
+            this._setUIChanges();
+        },
+
         onSearch : function () {
 			var oView = this.getView(),
 				sValue = oView.byId("SearchField").getValue(),
@@ -82,6 +138,37 @@ sap.ui.define([
 
 			oView.byId("PeopleTable").getBinding("items").filter(oFilter, FilterType.Application);
 		},
+
+        onResetDataSource : function () {
+            var oModel = this.getView().getModel(),
+                oBinding = this.byId("PeopleTable").getBinding("items"),
+                oTable = this.byId("PeopleTable");
+
+            oTable.removeSelections(true);
+
+            if (oBinding.hasPendingChanges()) {
+                console.log("Pending changes detected, resetting them first");
+                oBinding.resetChanges();
+            }
+
+            setTimeout(function() {
+                var oOperation = oModel.bindContext("/ResetDataSource(...)");
+                
+                oOperation.invoke().then(function () {
+                        oModel.refresh();
+                        MessageToast.show(this._getText("sourceResetSuccessMessage"), {
+                            duration: 3000,
+                            width: "15em"
+                        });
+                        
+                        console.log("Reset completed - no items selected");
+                        
+                    }.bind(this), function (oError) {
+                        MessageBox.error(oError.message);
+                    }
+                );
+            }.bind(this), 300);
+        },
 
         onSave : function () {
             var fnSuccess = function () {
@@ -96,9 +183,9 @@ sap.ui.define([
                 MessageBox.error(oError.message);
             }.bind(this);
 
-            this._setBusy(true);
+            this._setBusy(true); 
             this.getView().getModel().submitBatch("peopleGroup").then(fnSuccess, fnError);
-            this._bTechnicalErrors = false;
+            this._bTechnicalErrors = false; 
         },
 
 		onSort : function () {
@@ -127,7 +214,7 @@ sap.ui.define([
                 return;
             }
 
-            // Extract and remove the technical messages
+            
             aMessages = aContexts.map(function (oContext) {
                 return oContext.getObject();
             });
@@ -149,18 +236,20 @@ sap.ui.define([
             return this.getOwnerComponent().getModel("i18n").getResourceBundle().getText(sTextId, aArgs);
         },
 
+        _setBusy : function (bBusy) {
+            var oModel = this.getView().getModel("appView");
+            oModel.setProperty("/busy", bBusy);
+        },
+
         _setUIChanges : function (bHasUIChanges) {
             if (this._bTechnicalErrors) {
+                
                 bHasUIChanges = true;
             } else if (bHasUIChanges === undefined) {
                 bHasUIChanges = this.getView().getModel().hasPendingChanges();
-                oModel.setProperty("/hasUIChanges", bHasUIChanges);
             }
-        },
-
-        _setBusy : function (bIsBusy) {
             var oModel = this.getView().getModel("appView");
-            oModel.setProperty("/busy", bIsBusy);
+            oModel.setProperty("/hasUIChanges", bHasUIChanges);
         }
 	});
 });

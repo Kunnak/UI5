@@ -58,50 +58,59 @@ sap.ui.define([
         },
 
         onDelete : function () {
-		    var oContext,
-		        oSelected = this.byId("PeopleTable").getSelectedItem(),
-		        sUserName,
-		        oTable = this.byId("PeopleTable");
+            var oContext,
+                oTable = this.byId("PeopleTable"),
+                oSelected = oTable.getSelectedItem(),
+                sUserName;
  
-		    if (oSelected) {
-		        oContext = oSelected.getBindingContext();
-		        sUserName = oContext.getProperty("UserName");
-		        
-		        console.log("Deleting user:", sUserName); 
-		        
-		        oTable.removeSelections(true);
-		        
-		        MessageToast.show(this._getText("deletionSuccessMessage", [sUserName]), {
-		            duration: 3000,
-		            width: "15rem"
-		        });
-		        
-		        oContext.delete().then(function () {
-		            console.log("Delete successful for user:", sUserName); 
-		            this._setUIChanges(false);
-		            
-		        }.bind(this), function (oError) {
-		            console.log("Delete error:", oError); 
-		            this._setUIChanges();
-		            if (oError.canceled) {
-		                MessageToast.show(this._getText("deletionRestoredMessage", [sUserName]), {
-		                    duration: 3000,
-		                    width: "15rem"
-		                });
-		                return;
-		            }
-		            MessageBox.error(oError.message + ": " + sUserName);
-		        }.bind(this));
-		        
-		        this._setUIChanges(true);
-		    } else {
-		        console.log("No item selected for deletion"); 
-		        MessageToast.show("Please select a user to delete", {
-		            duration: 3000,
-		            width: "15rem"
-		        });
-		    }
-		},
+            if (oSelected) {
+                oContext = oSelected.getBindingContext();
+                sUserName = oContext.getProperty("UserName");
+                
+                console.log("1. Starting delete process for user:", sUserName);
+                
+                // Alle Auswahlen entfernen vor dem Löschen
+                oTable.removeSelections(true);
+                
+                MessageToast.show(this._getText("deletionSuccessMessage", [sUserName]), {
+                    duration: 3000,
+                    width: "15em"
+                });
+                
+                console.log("2. About to call oContext.delete()");
+                
+                var deletePromise = oContext.delete();
+                console.log("3. Delete promise created:", deletePromise);
+                
+                deletePromise.then(function () {
+                    console.log("4. DELETE SUCCESS CALLBACK - Promise resolved for user:", sUserName);
+                    // Explizit das UI-Model aktualisieren nach der Löschung
+                    this._setUIChanges(false);
+                    
+                }.bind(this), function (oError) {
+                    console.log("5. DELETE ERROR CALLBACK - Promise rejected:", oError);
+                    this._setUIChanges();
+                    if (oError.canceled) {
+                        MessageToast.show(this._getText("deletionRestoredMessage", [sUserName]), {
+                            duration: 3000,
+                            width: "15em"
+                        });
+                        return;
+                    }
+                    MessageBox.error(oError.message + ": " + sUserName);
+                }.bind(this));
+                
+                console.log("6. Delete promise setup complete, continuing with UI changes");
+                this._setUIChanges(true);
+                
+            } else {
+                console.log("No item selected for deletion");
+                MessageToast.show("Please select a user to delete", {
+                    duration: 3000,
+                    width: "15em"
+                });
+            }
+        },
 
         onInputChange : function (oEvt) {
             if (oEvt.getParameter("escPressed")) {
@@ -231,6 +240,10 @@ sap.ui.define([
 
             bMessageOpen = true;
         },
+            
+        onSelectionChange : function (oEvent) {
+            this._setDetailArea(oEvent.getParameter("listItem").getBindingContext());
+        },
 
         _getText : function (sTextId, aArgs) {
             return this.getOwnerComponent().getModel("i18n").getResourceBundle().getText(sTextId, aArgs);
@@ -250,6 +263,26 @@ sap.ui.define([
             }
             var oModel = this.getView().getModel("appView");
             oModel.setProperty("/hasUIChanges", bHasUIChanges);
+        },
+    
+
+        /**
+         * Toggles the visibility of the detail area
+         *
+         * @param {object} [oUserContext] - the current user context
+         */
+        _setDetailArea : function (oUserContext) {
+            var oDetailArea = this.byId("detailArea"),
+                oLayout = this.byId("defaultLayout"),
+                oSearchField = this.byId("searchField");
+ 
+            oDetailArea.setBindingContext(oUserContext || null);
+            // resize viewcontroller
+            oDetailArea.setVisible(!!oUserContext);
+            oLayout.setSize(oUserContext ? "60%" : "100%");
+            oLayout.setResizable(!!oUserContext);
+            oSearchField.setWidth(oUserContext ? "40%" : "20%");
         }
+
 	});
 });

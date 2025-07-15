@@ -440,9 +440,15 @@ sap.ui.define([
 			oUser = aUsers[iIndex];
 
 		if (oUser) {
-			aProperties.forEach(function (selectProperty) {
-				oHelper[selectProperty] = oUser[selectProperty];
-			});
+			// Handle case where aProperties is null or undefined
+			if (aProperties && aProperties.length > 0) {
+				aProperties.forEach(function (selectProperty) {
+					oHelper[selectProperty] = oUser[selectProperty];
+				});
+			} else {
+				// If no specific properties requested, return all properties
+				oHelper = JSON.parse(JSON.stringify(oUser));
+			}
 
 			return oHelper;
 		}

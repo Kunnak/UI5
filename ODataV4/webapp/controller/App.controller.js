@@ -270,18 +270,36 @@ sap.ui.define([
          * Toggles the visibility of the detail area
          *
          * @param {object} [oUserContext] - the current user context
-         */
-        _setDetailArea : function (oUserContext) {
+         */        _setDetailArea : function (oUserContext) {
             var oDetailArea = this.byId("detailArea"),
                 oLayout = this.byId("defaultLayout"),
-                oSearchField = this.byId("searchField");
+                oOldContext,
+                oSearchField = this.byId("SearchField");
  
+            if (!oDetailArea) {
+                return;
+            }
+ 
+            // Hole den aktuell gebundenen Context
+            oOldContext = oDetailArea.getBindingContext();
+            
+            // Setze KeepAlive für alten Context auf false
+            if (oOldContext) {
+                oOldContext.setKeepAlive(false);
+            }
+            
+            // Setze KeepAlive für neuen Context auf true  
+            if (oUserContext) {
+                oUserContext.setKeepAlive(true);
+            }
+
             oDetailArea.setBindingContext(oUserContext || null);
-            // resize viewcontroller
             oDetailArea.setVisible(!!oUserContext);
-            oLayout.setSize(oUserContext ? "60%" : "100%");
+            oLayout.setSize(oUserContext ? "50%" : "100%");
             oLayout.setResizable(!!oUserContext);
-            oSearchField.setWidth(oUserContext ? "40%" : "20%");
+            if (oSearchField) {
+                oSearchField.setWidth(oUserContext ? "50%" : "25%");
+            }
         }
 
 	});

@@ -166,14 +166,19 @@
 												</FlexBox>
 										</semantic:headerContent>
 										<semantic:content>
+
+											<!-- Adress Details -->
                                             <VBox>
-												<FlexBox wrap="Wrap" justifyContent="SpaceBetween">
-                                                    <VBox class="sapUiMediumMarginEnd">
+												<FlexBox 
+													wrap="Wrap" 
+													justifyContent="SpaceBetween">
+                                                    <VBox class="sapUiSmallMargin">
 														<layoutData>
 															<FlexItemData growFactor="1" />
 														</layoutData>
-														<f:Form	editable="false"
-															class="sapUiSmallMarginBegin">
+														<f:Form	
+															editable="false"
+															class="saUiSmallMarginBegin saUiSmallMarginEnd">
 															<f:title>
 																<core:Title text="{i18n>addressTitleText}" />
 															</f:title>
@@ -221,12 +226,15 @@
 														</f:formContainers>
 													</f:Form>
 												</VBox>
-                                                <VBox class="sapUiMediumMarginBegin">
+
+												<!-- Best Friend Box-->
+                                                <VBox class="sapUiSmallMargin" >
 													<layoutData>
 														<FlexItemData growFactor="1" />
 													</layoutData>
-													<f:Form	editable="false"
-														class="sapUiSmallMarginBegin sapUiSmallMarginEnd">
+													<f:Form	
+														editable="false"
+                                                        class="saUiSmallMarginBegin saUiSmallMarginEnd" >
 														<f:title>
 															<core:Title text="{i18n>bestFriendTitleText}" />
 														</f:title>
@@ -270,6 +278,54 @@
 													</f:Form>
 												</VBox>
 												</FlexBox>
+                                                <Table
+													id="friendsTable"
+													width="auto"
+													items="{path: 'Friends',
+															parameters: {
+                                                                $$ownRequest: true
+															}}"
+													noDataText="No Data"
+													class="sapUiSmallMarginBottom">
+													<headerToolbar>
+														<Toolbar>
+															<Title
+																text="Friends"
+																titleStyle="H3"
+																level="H3"/>
+														</Toolbar>
+													</headerToolbar>
+													<columns>
+														<Column>
+															<Text text="Nickname"/>
+														</Column>
+														<Column>
+															<Text text="Firstname"/>
+														</Column>
+														<Column>
+															<Text text="Lastname"/>
+														</Column>
+														<Column>
+															<Text text="Age"/>
+														</Column>
+													</columns>
+													<items>
+														<ColumnListItem>
+															<cells>
+																<Text text="{UserName}"/>
+															</cells>
+															<cells>
+																<Text text="{FirstName}"/>
+															</cells>
+															<cells>
+																<Text text="{LastName}"/>
+															</cells>
+															<cells>
+																<Text text="{Age}"/>
+															</cells>
+														</ColumnListItem>
+													</items>
+												</Table>
 											</VBox>
 										</semantic:content>
 									</semantic:SemanticPage>

@@ -1,5 +1,6 @@
 {
 	"_version": "1.38.0",
+
 	"sap.app": {
 		"id": "sap.ui.demo.nav",
 		"type": "application",
@@ -10,11 +11,15 @@
 			],
 			"fallbackLocale": ""
 		},
+
+
 		"title": "{{appTitle}}",
 		"description": "{{appDescription}}",
 		"applicationVersion": {
 			"version": "1.0.0"
 		},
+
+
 		"dataSources": {
 			"employeeRemote": {
 				"uri": "/here/goes/your/serviceUrl/",
@@ -26,6 +31,8 @@
 			}
 		}
 	},
+
+
 	"sap.ui": {
 		"technology": "UI5",
 		"deviceTypes": {
@@ -34,6 +41,8 @@
 			"phone": true
 		}
   	},
+
+
 	"sap.ui5": {
 		"rootView": {
 			"viewName": "sap.ui.demo.nav.view.App",
@@ -41,6 +50,8 @@
 			"async": true,
 			"id": "app"
 		},
+
+
 		"dependencies": {
 			"minUI5Version": "1.98.0",
 			"libs": {
@@ -48,6 +59,8 @@
 				"sap.ui.core": {}
 			}
 		},
+
+
 		"models": {
 			"i18n": {
 				"type": "sap.ui.model.resource.ResourceModel",
@@ -62,6 +75,60 @@
 			"": {
 				"dataSource": "employeeRemote"
 			}
-		}
+		},
+
+
+        "routing": {
+            "config": {
+                "routerClass":"sap.m.routing.Router",
+                "type": "View",
+                "viewType": "XML",
+                "path": "sap.ui.demo.nav.view",
+                "controlId": "app",
+                "controlAggregation": "pages",
+                "transition": "slide",
+                "bypassed": {
+                    "target": "notFound"
+                },
+                "async": true
+            },
+            "routes": [{
+                "pattern": "",
+                "name": "appHome",
+                "target": "home"
+            }, {
+                "pattern": "employees",
+                "name": "employeeList",
+                "target": "employees"
+            }, {
+                "pattern": "employees/{employeeId}",
+                "name": "employee",
+                "target": "employee"
+            }],
+            "targets": {
+                "home": {
+                    "id": "home",
+                    "name": "Home",
+                    "level": 1
+                },
+                "notFound": {
+                    "id": "notFound",
+                    "name": "NotFound",
+                    "transition": "show"
+                },
+
+                "employees": {
+                    "id": "employeeList",
+                    "name": "employee.EmployeeList",
+                    "level": 2
+                },
+
+                "employee": {
+                    "id": "employee",
+                    "name": "employee.Employee",
+                    "level": 3
+                }
+            }
+        }
 	}
 }

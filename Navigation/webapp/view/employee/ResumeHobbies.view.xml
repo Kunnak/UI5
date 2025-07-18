@@ -1,0 +1,4 @@
+<!DOCTYPE root-source>
+<mvc:View xmlns="sap.m" xmlns:mvc="sap.ui.core.mvc">
+    <Text text="{Hobbies}"/>
+</mvc:View>

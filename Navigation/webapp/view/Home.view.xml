@@ -15,6 +15,11 @@
                 text="{i18n>ShowEmployeeList}"
                 class="sapUiTinyMarginEnd"
                 press=".onNavToEmployees"/>
+            <Button 
+                id="employeeOverviewBtn"
+                text="{i18n>ShowEmployeeOverview}"
+                class="sapUiTinyMarginEnd"
+                press=".onNavToEmployeeOverview"/>
         </content>
     </Page>
 </mvc:View>

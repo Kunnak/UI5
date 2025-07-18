@@ -1,14 +1,14 @@
 [
 	{
 		"EmployeeID": 1,
-		"LastName": "Davolio",
-		"FirstName": "Nancy",
-		"Address": "507 - 20th Ave. E. Apt. 2A",
-		"City": "Seattle",
-		"Region": "WA",
-		"PostalCode": "98122",
-		"Country": "USA",
-		"HomePhone": "(206) 555-9857",
+		"LastName": "Ruhmacher",
+		"FirstName": "Schalf",
+		"Address": "Bergmannstraße 72",
+		"City": "Berlin",
+		"Region": "BER",
+		"PostalCode": "10961",
+		"Country": "DE",
+		"HomePhone": "0800 999 444 0",
 		"ResumeID": 1,
 		"Resume" : {
 			"__deferred": {
@@ -146,6 +146,23 @@
 		"Country": "UK",
 		"HomePhone": "(71) 555-4444",
 		"ResumeID": 9,
+		"Resume" : {
+			"__deferred": {
+				"uri": "/here/goes/your/serviceUrl/Employees(9)/Resume"
+			}
+		}
+	},
+	{
+		"EmployeeID": 10,
+		"LastName": "Existing",
+		"FirstName": "Not",
+		"Address": "N/A",
+		"City": "N/A",
+		"Region": null,
+		"PostalCode": "N/A",
+		"Country": "N/A",
+		"HomePhone": "N/A",
+		"ResumeID": 11,
 		"Resume" : {
 			"__deferred": {
 				"uri": "/here/goes/your/serviceUrl/Employees(9)/Resume"
